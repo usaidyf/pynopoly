@@ -1,39 +1,49 @@
 class Space:
-    is_corner = False
-    index = None
-    name = ""
+    def __init__(self, name, index):
+        self.name = name
+        self.index = index
+        self.type = "<undefined>"
+
+    def on_land(self, player):
+        """Override this in subclasses to define what happens"""
+        print(f"{player.name} landed on {self.name}")
 
 
 class PropertySpace(Space):
-    name = "property"
-    price = 0
-    rent = 0
-    index = None
+    def __init__(self, name, index, price, rent_values):
+        super().__init__(name, index)
+        self.price = price # Cost to purchase the property
+        self.rent_values = rent_values  # A list or dict of rent levels
+        self.owner = None # Instance of a Player or None
+        self.type = "property"
 
-    def __init__(self, name, price, rent, index=None):
-        self.index = index
-        self.name = name
-        self.price = price
-        self.rent = rent
+    def on_land(self, player):
+        super().on_land(player)
+        if self.owner is None:
+            # Logic for offering purchase
+            pass
+        elif self.owner != player:
+            # Logic for paying rent
+            pass
 
 
 class UtilitySpace(PropertySpace):
-    name = "utility"
+    type = "utility"
     price = 0
     rent = 0
 
-    def __init__(self, name, price, rent):
-        super().__init__(name, price, rent)
+    def __init__(self, type, price, rent):
+        super().__init__(type, price, rent)
 
 
 class StationSpace(PropertySpace):
-    name = "station"
+    type = "station"
     price = 0
     rent = 0
 
 
 class CornerSpace(Space):
-    name = "corner"
+    type = "corner"
     is_corner = True
     is_jail = False
     is_go_to_jail = False
@@ -43,14 +53,14 @@ class CornerSpace(Space):
 
 class ChanceSpace(Space):
     is_corner = False
-    name = "chance"
+    type = "chance"
 
 
 class CommunityChestSpace(Space):
     is_corner = False
-    name = "community_chest"
+    type = "community_chest"
 
 
 class TaxSpace(Space):
     is_corner = False
-    name = "tax"
+    type = "tax"
